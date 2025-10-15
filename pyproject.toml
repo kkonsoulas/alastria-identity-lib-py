@@ -18,7 +18,11 @@ requests = "^2.24.0"
 pytest = "^6.1.1"
 mock = "^4.0.2"
 jwcrypto = "^0.8"
-ecdsa = "^0.16.1"
+# Pin ecdsa to 0.19.1 (or at least >=0.19) because tokens.py relies on
+# specific PEM/DER serialization behavior (named-curve / PKCS#8) so
+# `jwcrypto.JWK.from_pem()` can import keys reliably. See
+# `alastria_identity/services/tokens.py` for the explicit to_pem() calls.
+ecdsa = "^0.19.1"
 eth_abi = "^2.1.1"
 
 [tool.poetry.dev-dependencies]

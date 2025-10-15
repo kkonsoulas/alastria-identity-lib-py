@@ -1,6 +1,7 @@
 from typing import List
 from dataclasses import asdict
-from eth_account.account import SignedTransaction, HexBytes
+from eth_account.datastructures import SignedTransaction
+from hexbytes import HexBytes
 
 from alastria_identity.types import UserIdentity, Transaction, DEFAULT_NONCE
 
@@ -13,7 +14,7 @@ class UserIdentityService:
         self.identity.transactions.append(transaction)
 
     def get_signed_transactions(self) -> List:
-        return map(self.sign_transaction, self.identity.transactions)
+        return list(map(self.sign_transaction, self.identity.transactions))
 
     def get_signed_transaction_from_anonymous(self, transaction: Transaction) -> HexBytes:
         user_transaction = self.update_transaction_nonce(transaction)
@@ -21,8 +22,8 @@ class UserIdentityService:
 
     def update_transaction_nonce(self, transaction: Transaction) -> Transaction:
         if transaction.nonce == DEFAULT_NONCE:
-            transaction.nonce = self.identity.endpoint.eth.getTransactionCount(
-                self.identity.address)
+            transaction.nonce = str(self.identity.endpoint.eth.getTransactionCount(
+                self.identity.address))
         return transaction
 
     def sign_transaction(self, transaction: Transaction) -> HexBytes:
