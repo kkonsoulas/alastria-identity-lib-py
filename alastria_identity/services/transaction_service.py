@@ -26,7 +26,7 @@ class TransactionService:
     def generate_transaction(
         self, function_name: str, args: list
     ) -> Transaction:
-        encoded_abi  = self.contract_handler.encodeABI(
+        encoded_abi = self.contract_handler.encode_abi(
             fn_name=function_name,
             args=args)
 
@@ -38,7 +38,7 @@ class TransactionService:
         contract_address = self.delegated_call_address or self.contract_address
 
         return Transaction(
-            to=Web3.toChecksumAddress(contract_address),
+            to=Web3.to_checksum_address(contract_address),
             data=payload)
 
     def delegated(self, delegated_data) -> str:
@@ -48,9 +48,9 @@ class TransactionService:
             self.DEFAULT_CONTRACT_DELEGATED_NAME,
             self.endpoint)
 
-        return identity_manager_contract.encodeABI(
+        return identity_manager_contract.encode_abi(
             fn_name=self.DEFAULT_DELEGATED_FUNCTION_NAME,
-            args=[Web3.toChecksumAddress(
+            args=[Web3.to_checksum_address(
                 self.contract_address), 0, delegated_data]
         )
 

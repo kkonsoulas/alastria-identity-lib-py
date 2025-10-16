@@ -10,7 +10,7 @@ class ContractsService:
 
     def get_contract_handler(
         self, contract_name: str, endpoint: Web3
-    ) -> Contract:
+    ) -> type[Contract]:
         return endpoint.eth.contract(
             abi=self.get_abi_by_contract_name(contract_name))
 

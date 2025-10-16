@@ -2,7 +2,7 @@ from typing import List
 from dataclasses import asdict
 from eth_account.datastructures import SignedTransaction
 from hexbytes import HexBytes
-
+from web3 import Web3
 from alastria_identity.types import UserIdentity, Transaction, DEFAULT_NONCE
 
 
@@ -22,8 +22,8 @@ class UserIdentityService:
 
     def update_transaction_nonce(self, transaction: Transaction) -> Transaction:
         if transaction.nonce == DEFAULT_NONCE:
-            transaction.nonce = str(self.identity.endpoint.eth.getTransactionCount(
-                self.identity.address))
+            transaction.nonce = str(self.identity.endpoint.eth.get_transaction_count(
+                Web3.to_checksum_address(self.identity.address)))
         return transaction
 
     def sign_transaction(self, transaction: Transaction) -> HexBytes:
